@@ -3,9 +3,11 @@ from torch import nn, optim
 import torch
 
 model = EfficientNet.from_pretrained("efficientnet-b0")
+image_size = EfficientNet.get_image_size("efficientnet-b0")
+print(image_size)
 model.set_swish(memory_efficient=True)
 out_features = 2
-model = nn.Sequential(model, nn.Linear(1000, 1))
+model = nn.Sequential(nn.Upsample(image_size),model, nn.Linear(1000, 1))
 model.train()
 device: torch.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model.to(device)
